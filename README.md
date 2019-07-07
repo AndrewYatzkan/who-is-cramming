@@ -16,6 +16,7 @@
 	- You will be prompted to enter the set ID of the set which you would like to examine the data for.
 	- You can find the set IDs in sets.js or by viewing the response when you provide an incorrect ID.
 	- Y axis is the total number of studiers, X axis is the number of hours since the first studier or when collect.js was initially ran.
+	- Hover over a column with your cursor to see the Quizlet usernames of the new studiers.
 
 ## Limitations/Future Additions:
 - The set must be public, in the future I may add the ability to sign in with Quizlet & access private sets.
