@@ -23,3 +23,6 @@
 - Although all the necessary data is provided, currently the X axis on the graph indicates the # of hours since the first studier, not the # of hours away from the test.
 - The ability to view all/multiple sets at once in graph.html
 - Some sloppy/inefficient JS in graph.html (mostly because I didn't feel like properly reading the plotly.js documentation). If you would like to contribute, this is a good place to get started.
+- Instead of adding sets to sets.js, add tests which can have multiple sets.
+- Automatically find the line of best fit.
+- (Maybe) build a custom graph instead of using plotly.js because we’re just using such a simple feature.
