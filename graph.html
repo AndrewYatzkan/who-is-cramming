@@ -30,11 +30,11 @@
 		  }
 		})();
 
-		var id = prompt("Enter the ID of the set you would like to analyze"), set;
-		if (!(set = data.filter(set => set.id == id)[0])) {
-			alert("Could not find set ID.\n(Set IDs are: " + data.map(set => set.id).join() + ")");
+		var id = prompt("Enter the ID of the set you would like to analyze"), test;
+		if (!(test = data.filter(test => test.ids.indexOf(parseInt(id)) > -1)[0])) {
+			alert("Could not find set ID.\n(Set IDs are: " + data.map(test => test.ids.join()).join() + ")");
 		} else {
-			data = set.studiers;
+			data = test.studiers;
 			var min = Math.min(...data.map(i => i.time));
 
 	        for (var i = 0; i < data.length; i++) {
