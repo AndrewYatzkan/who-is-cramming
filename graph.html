@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>who-is-cramming</title>
+	<script src="plotly.js"></script>
+	<script src="sets.js"></script>
+</head>
+<body>
+	<script>
+		// observeDOM function from stackoverflow: https://stackoverflow.com/a/14570614/9307157
+		var observeDOM = (function(){
+		  var MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+
+		  return function( obj, callback ){
+		    if( !obj || !obj.nodeType === 1 ) return; // validation
+
+		    if( MutationObserver ){
+		      // define a new observer
+		      var obs = new MutationObserver(function(mutations, observer){
+		          callback(mutations);
+		      })
+		      // have the observer observe foo for changes in children
+		      obs.observe( obj, { childList:true, subtree:true });
+		    }
+		    
+		    else if( window.addEventListener ){
+		      obj.addEventListener('DOMNodeInserted', callback, false);
+		      obj.addEventListener('DOMNodeRemoved', callback, false);
+		    }
+		  }
+		})();
+
+		var id = prompt("Enter the ID of the set you would like to analyze"), set;
+		if (!(set = data.filter(set => set.id == id)[0])) {
+			alert("Could not find set ID.\n(Set IDs are: " + data.map(set => set.id).join() + ")");
+		} else {
+			data = set.studiers;
+			var min = Math.min(...data.map(i => i.time));
+
+	        for (var i = 0; i < data.length; i++) {
+	                var item = data[i];
+	                item.time -= min;
+	                item.time /= 3600;
+	                item.time = Math.round(item.time);
+	        }
+
+	        var timeValues = data.map(i => i.time);
+
+	        var newStudiersPerHour = [];
+	        for (var i = 0; i <= Math.max(...timeValues); i++) {
+	                newStudiersPerHour.push(timeValues.reduce((a, b) => a + (b === i), 0));
+	        }
+
+	        var totalStudiersPerHour = newStudiersPerHour;
+
+	        for (var i = 1; i < totalStudiersPerHour.length; i++) {
+	                totalStudiersPerHour[i] += totalStudiersPerHour[i-1];
+	        }
+
+	        var d3 = Plotly.d3;
+			var gd3 = d3.select("body")
+			    .append("div")
+			    .style({ height: "100vh" });
+
+			var gd = gd3.node();
+			Plotly.plot(gd,
+			[{
+				x: totalStudiersPerHour.map((val, i) => val = i).map(hr => data.filter(i => i.time === hr).map(i => i.username).join("<br>") || "<no new studiers>"), 
+				y: totalStudiersPerHour,
+				type: "bar"
+			}],
+			{
+			    title: "who-is-cramming",
+			    font: {
+			        size: 16
+			  	},
+			  	xaxis: {
+			  		tickangle: 0
+			  	}
+			});
+
+			window.onresize = () => {
+				Plotly.Plots.resize(gd);
+			}
+
+			observeDOM(document.body, () => {
+				var texts = document.querySelectorAll("text");
+				if (texts[0].innerHTML === "0") return;
+				for (var i = 0; i < totalStudiersPerHour.length; i++)
+					texts[i].innerHTML = i;
+			});
+		}
+	</script>
+</body>
+</html>
